@@ -13,7 +13,7 @@ And the lag between data ingestion and it showing up on a graph is a real proble
 
 This use-case is a far more complex work-flow than an `approx_distinct` implementation, but something @prasanth_j's HLL++ library can enable, if you wrote the right UDAF/UDF combinations.
 
-If you maintained an RDD of daily and hourly values of HLL(uid) tables, then to generate an upto the hour approximate MAU calculation would involve no scans of any user data beyond the current hour.
+If you maintained an RRD of daily and hourly values of HLL(uid) tables, then to generate an upto the hour approximate MAU calculation would involve no scans of any user data beyond the current hour.
 
 You could start off simple with 
 
