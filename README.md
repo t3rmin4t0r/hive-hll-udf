@@ -3,7 +3,7 @@ Approximate Queries for Hive
 
 HyperLogLog and LinearCounting UDFs have been written before, that part isn't new,but nobody seems to have built a proper work-flow composable HLL++ implementation for actual data storage.
 
-When I was the /on-call architect/ at Zynga's SEG, I used to constantly follow DAU charts as my go-to early warning tool.
+When I was in Zynga's SEG, I used to constantly follow DAU charts as my go-to early warning tool.
 
 The influx of new users will start to flatten out whenever Facebook had an API outage or someone enables an experiment with bad code.
 
