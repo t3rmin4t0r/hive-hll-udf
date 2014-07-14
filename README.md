@@ -15,14 +15,20 @@ This use-case is a far more complex work-flow than an `approx_distinct` implemen
 
 If you maintained an RDD of daily and hourly values of HLL(uid) tables, then to generate an upto the hour approximate MAU calculation would involve no scans of any user data beyond the current hour.
 
-For a HIVE-13 build, you could do that with
+You could start off simple with 
 
-    days as (select hll\_merge(uid\_hll) as d\_hll from days_rrd where day between ....),
-    hours as (select hll\_merge(uid\_hll) h\_hll as  from today_rrd where hour between ...)
-      select hll\_count(hll\_union(days.d\_hll, hours.d\_hll, current.c\_hll)) as mau from  
-         (select hll(uid) as c\_hll from       current\_hour\_raw) current;
+    select approx_distinct(uid) from raw_data;
 
-For cohort analysis, you can use these with `GROUP BY ... WITH CUBE` or `ROLLUP` as well.
+But for the full composability example, you can see why splitting up the components of `approx_distinct` was a good idea
+
+    days as (select hll_merge(uid_hll) as d_hll from days_rrd where day between ....),
+    hours as (select hll_merge(uid_hll) h_hll as  from today_rrd where hour between ...)
+      select hll_count(hll_union(days.d_hll, hours.d_hll, current.c_hll)) as mau from  
+         (select hll(uid) as c_hll from       current_hour_raw) current;
+
+You can use these with `GROUP BY ... WITH CUBE` or `ROLLUP` as well, if you have multiple groupings in the report.
+
+You can do more set cardinality operations as well, but it multiplies the error bar everytime you operate on it - you can do `2*hll_count(hll_union(a,b)) - hll_count(a) - hll_count(b)` for approximate interesections.
 
 The current functions are 
 
